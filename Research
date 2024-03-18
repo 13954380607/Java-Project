@@ -1,0 +1,604 @@
+# 加载 readxl 包
+library(readxl)
+
+# 读取 Excel 文件
+data <- read_excel("C:/Users/DELL/Desktop/2023_q3 (1).xlsx")
+total_sum <- sum(data$TOT_OP_EXP) + sum(data$CAP_EXP)+sum(data$EXP_POPS)+sum(data$EXP_PIPS)
+
+# 输出总和
+print(total_sum)
+
+# 定义时间段和对应的值
+time_periods <- c("1/1/2019-3/31/2019", "4/1/2019-6/30/2019", "7/1/2019-9/30/2019", 
+                  "10/1/2019-12/31/2019", "1/1/2020-3/31/2020", "4/1/2020-6/30/2020", 
+                  "7/1/2020-9/30/2020", "10/1/2020-12/31/2020", "1/1/2021-3/31/2021", 
+                  "4/1/2021-6/30/2021", "7/1/2021-9/30/2021", "10/1/2021-12/31/2021", 
+                  "1/1/2022-3/31/2022", "4/1/2022-6/30/2022", "7/1/2022-9/30/2022", 
+                  "10/1/2022-12/31/2022", "1/1/2023-3/31/2023", "4/1/2023-6/30/2023", 
+                  "7/1/2023-9/30/2023")
+values <- c(39633408937, 41623956072, 40323033805, 43309827301, 38285045643, 37538392306, 
+            37605413344, 39915698232, 39205546274, 40352965169, 40240039304, 41582631395, 
+            41899089444, 43599816888, 44031260299, 45284054425, 44771166153, 46603426436, 
+            45215845226)
+
+# 提取时间段的开始和结束日期
+time_periods_split <- strsplit(time_periods, "-")
+start_dates <- as.Date(sapply(time_periods_split, `[`, 1), format = "%m/%d/%Y")
+end_dates <- as.Date(sapply(time_periods_split, `[`, 2), format = "%m/%d/%Y")
+
+# 计算时间段的中点日期
+mid_dates <- start_dates + (end_dates - start_dates) / 2
+
+# 汇总统计信息
+summary(values)
+
+# 调整绘图区域大小
+par(pin = c(6, 4))  # 调整为更宽的绘图区域
+
+# 创建折线图
+plot(mid_dates, values, type = "l", xaxt = "n", xlab = "Time Period", ylab = "Value", main = "Value Over Time")
+axis(1, at = mid_dates, labels = time_periods, las = 2, cex.axis = 0.8)  # 调整 cex.axis 为适当大小
+
+plot(mid_dates, values, type = "l", xaxt = "n", xlab = "Time Period", ylab = "Value", main = "Value Over Time")
+axis(1, at = mid_dates, labels = time_periods, las = 2, cex.axis = 0.7)  # 将 cex.axis 设置为小一些，防止标签重叠
+
+
+
+
+
+
+# Load required libraries
+if (!require(devtools)) install.packages("devtools")
+devtools::install_github("kassambara/ggpubr")
+library(ggpubr)
+
+# Create a dataframe with your data
+data <- data.frame(
+  Period = c("Q1 2023", "Q2 2023", "Q3 2023", "Q4 2023", "Q1 2022", "Q2 2022", "Q3 2022", "Q4 2022", "Q1 2021", "Q2 2021", "Q3 2021", "Q4 2021", "Q1 2020", "Q2 2020", "Q3 2020", "Q4 2020", "Q1 2019", "Q2 2019", "Q3 2019", "Q4 2019"),
+  Period_Start = as.Date(c("1/1/2023", "4/1/2023", "7/1/2023", "10/1/2023", "1/1/2022", "4/1/2022", "7/1/2022", "10/1/2022", "1/1/2021", "4/1/2021", "7/1/2021", "10/1/2021", "1/1/2020", "4/1/2020", "7/1/2020", "10/1/2020", "1/1/2019", "4/1/2019", "7/1/2019", "10/1/2019"), format = "%m/%d/%Y"),
+  Period_End = as.Date(c("3/31/2023", "6/30/2023", "9/30/2023", "12/31/2023", "3/31/2022", "6/30/2022", "9/30/2022", "12/31/2022", "3/31/2021", "6/30/2021", "9/30/2021", "12/31/2021", "3/31/2020", "6/30/2020", "9/30/2020", "12/31/2020", "3/31/2019", "6/30/2019", "9/30/2019", "12/31/2019"), format = "%m/%d/%Y"),
+  Period_Positive = c(0.545, 0.623, 0.573, 0.528, 0.478, 0.481, 0.652, 0.417, 0.555, 0.359, 0.347, 0.503, 0.512, 0.564, 0.644, 0.417, 0.62, 0.59, 0.5, 0.554),
+  Period_Negative = c(0.455, 0.377, 0.427, 0.472, 0.522, 0.519, 0.348, 0.583, 0.445, 0.641, 0.653, 0.497, 0.488, 0.436, 0.356, 0.583, 0.38, 0.41, 0.5, 0.446),
+  Sentiment_Index = c(0.09, 0.246, 0.146, 0.056, -0.044, -0.038, 0.304, -0.166, 0.11, -0.282, -0.306, 0.006, 0.024, 0.128, 0.288, -0.166, 0.24, 0.18, 0, 0.108),
+  Expense = c(44771166153, 46603426436, 45215845226, NA, 41899089444, 43599816888, 44031260299, 45284054425, 39205546274, 40352965169, 40240039304, 41582631395, 38285045643, 37538392306, 37605413344, 39915698232, 39633408937, 41623956072, 40323033805, 43309827301)
+)
+
+# Compute correlations
+correlation_positive <- cor.test(data$Sentiment_Index, data$Period_Positive, method = "pearson")
+correlation_negative <- cor.test(data$Sentiment_Index, data$Period_Negative, method = "pearson")
+correlation_public_health <- cor.test(data$Sentiment_Index, data$Expense, method = "pearson")
+
+# Print correlation coefficients
+print(correlation_positive)
+print(correlation_negative)
+print(correlation_public_health)
+
+# Visualize correlations
+ggscatter(data, x = "Sentiment_Index", y = "Period_Positive", 
+          add = "reg.line", conf.int = FALSE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Sentiment Index", ylab = "Period Positive")
+
+ggscatter(data, x = "Sentiment_Index", y = "Period_Negative", 
+          add = "reg.line", conf.int = FALSE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Sentiment Index", ylab = "Period Negative")
+
+ggscatter(data, x = "Sentiment_Index", y = "Expense", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Sentiment Index", ylab = "Expense")
+
+# Load necessary libraries
+library(zoo)
+library(ggplot2)
+
+# Create a dataframe with the given data
+data <- data.frame(
+  period = c("2019.1", "2019.3", "2019.5", "2019.6", "2019.7", "2019.9", "2019.10.11", "2019.10.30", "2019.12",
+             "2020.1", "2020.3.3", "2020.3.15", "2020.3.23", "2020.4", "2020.6", "2020.7", "2020.9", "2020.11", "2020.12",
+             "2021.1", "2021.3", "2021.4", "2021.6", "2021.7", "2021.9", "2021.11", "2021.12",
+             "2022.1", "2022.3", "2022.5", "2022.6", "2022.7", "2022.9", "2022.11", "2022.12",
+             "2023.2", "2023.3", "2023.5", "2023.6", "2023.7", "2023.9", "2023.11", "2023.12",
+             "2024.1"),
+  positive = c(70, 54.5, 63.6, 54.5, 41.7, 58.3, 70, 46.2, 50, 38.5, 60, 56.2, 50, 54.5, 58.3, 75, 53.8, 41.7, 41.7,
+               69.2, 41.7, 33.3, 38.5, 30.8, 38.5, 46.7, 53.8,
+               50, 45.5, 41.7, 54.5, 66.7, 63.6, 41.7, 41.7,
+               54.5, 54.5, 54.5, 70, 54.5, 60, 60, 45.5, 50),
+  negative = c(30, 45.5, 36.4, 45.5, 58.3, 41.7, 30, 53.8, 50, 61.5, 40, 43.8, 50, 45.5, 41.7, 25, 46.2, 58.3, 58.3,
+               30.8, 58.3, 66.7, 61.5, 69.2, 61.5, 53.3, 46.2,
+               50, 54.5, 58.3, 45.5, 33.3, 36.4, 58.3, 58.3,
+               45.5, 45.5, 45.5, 30, 45.5, 40, 40, 54.5, 50)
+)
+
+# Convert period column to Date format
+data$period <- as.Date(data$period, format = "%Y.%m.%d")
+
+# Create a function to convert dates to quarters based on specified ranges
+to_quarter <- function(x) {
+  quarter <- ifelse(as.numeric(format(x, "%m")) %in% c(1, 2, 3), "Q1",
+                    ifelse(as.numeric(format(x, "%m")) %in% c(4, 5, 6), "Q2",
+                           ifelse(as.numeric(format(x, "%m")) %in% c(7, 8, 9), "Q3", "Q4")))
+  year <- format(x, "%Y")
+  paste0(year, " ", quarter)
+}
+
+# Apply the function to the period column
+data$quarter <- to_quarter(data$period)
+
+# Aggregate the data by quarter
+quarterly_data <- aggregate(cbind(positive, negative) ~ quarter, data, mean)
+
+# Calculate sentiment index for quarterly data
+quarterly_data$sentiment_index <- (quarterly_data$positive - quarterly_data$negative) / (quarterly_data$positive + quarterly_data$negative)
+
+# Plotting time series for positive, negative, and sentiment index
+ggplot(quarterly_data, aes(x = quarter, y = positive)) +
+  geom_line(color = "blue") +
+  labs(title = "Time Series of Positive Sentiment",
+       x = "Time",
+       y = "Positive Sentiment") +
+  theme_minimal()
+
+ggplot(quarterly_data, aes(x = quarter, y = negative)) +
+  geom_line(color = "red") +
+  labs(title = "Time Series of Negative Sentiment",
+       x = "Time",
+       y = "Negative Sentiment") +
+  theme_minimal()
+
+ggplot(quarterly_data, aes(x = quarter, y = sentiment_index, group = 1)) +
+  geom_line(color = "green") +
+  labs(title = "Time Series of Sentiment Index",
+       x = "Time",
+       y = "Sentiment Index") +
+  theme_minimal()
+
+
+
+
+library(readxl)
+
+# 读取Excel文件
+excel_file <- "C:/Users/DELL/Desktop/科研数据有关花费.xlsx"
+my_data <- read_excel(excel_file)
+
+# 打印前几行数据
+head(my_data, 6)
+
+library("ggpubr")
+ggscatter(my_data, x = "Period Positive", y = "Expense", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Period Positive", ylab = "Expense")
+cor(my_data$`Period Positive`,my_data$Expense, method = c("pearson", "kendall", "spearman"))
+shapiro.test(my_data$`Period Positive`)
+shapiro.test(my_data$`Expense`)
+ggscatter(my_data, x = "Period Negative", y = "Expense", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Period Negative", ylab = "Expense")
+cor(my_data$`Period Negative`,my_data$Expense, method = c("pearson", "kendall", "spearman"))
+ggscatter(my_data, x = "Sentiment Index", y = "Expense", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Sentiment Index", ylab = "Expense")
+cor(my_data$`Sentiment Index`,my_data$Expense, method = c("pearson", "kendall", "spearman"))
+
+
+
+library(reticulate)
+library(here)
+
+# 使用 here() 函数获取绝对路径
+python_path <- here("env", "Scripts", "python.exe")
+
+python_path <- "C:/Users/DELL/env/Scripts/python.exe"
+use_python(python_path)
+
+# 检查 Python 解释器的路径是否正确
+py_config()
+
+# 检查 Python 是否可用
+py_available()
+# Install Python package into virtual environment
+reticulate::py_install("transformers", pip = TRUE)
+
+# Also installing pytorch just as a contingency?
+reticulate::py_install(c("torch", "sentencepiece"), pip = TRUE)
+transformers <- reticulate::import("transformers")
+classifier <- transformers$pipeline(task = "text-classification")
+library(tidyverse)
+install.packages("pdftools")
+library(pdftools)
+fomc_text <- pdf_text("C:/Users/DELL/Desktop/2019.12.pdf")
+
+
+outputs <- classifier(fomc_text)
+outputs %>% 
+  pluck(1) %>% 
+  as_tibble()
+# Download model for ner task
+ner_tagger <- transformers$pipeline(task = "ner", aggregation_strategy = "simple")
+
+# Make predictions
+outputs <- ner_tagger(fomc_text)
+str(outputs)
+
+# Convert predictions to tibble
+# This takes some bit of effort since some of the variables are numpy objects 
+
+# Function that takes a list element and converts
+# it to a character
+to_r <- function(idx){
+  # Obtain a particular output from entire named list
+  output_idx = outputs %>% 
+    pluck(idx)
+  
+  # Convert score from numpy to integer
+  output_idx$score = paste(output_idx$score) %>% 
+    as.double()
+  
+  return(output_idx)
+  
+}
+# Convert outputs to tibble
+map_dfr(1:length(outputs), ~to_r(.x))
+library(purrr)
+library(dplyr)
+
+# Define function to convert sublist to tibble
+to_tibble <- function(output) {
+  output_df <- map_dfr(output, ~as.data.frame(.x))
+  return(output_df)
+}
+
+# Convert each sublist to a tibble and bind them row-wise
+outputs_df <- map_dfr(outputs, ~to_tibble(.x))
+
+# Print the resulting tibble
+print(outputs_df)
+# Specify task
+reader <- transformers$pipeline(task = "question-answering")
+
+# Question we want answered
+question <-  "What does the customer want?"
+
+# Provide model with question and context
+outputs_df <- reader(question = question, context = text)
+outputs_df %>% 
+  as_tibble()
+
+
+#实验
+library(transformers)
+
+# Load a pre-trained tokenizer
+tokenizer <- tokenizer_bert()
+
+# Tokenize the text data
+tokenized_text <- tokenizer$encode(fomc_text)
+
+# Truncate or split the tokenized sequence to fit within the maximum sequence length
+max_seq_length <- 512
+num_segments <- ceiling(length(tokenized_text$input_ids) / max_seq_length)
+
+# Initialize a list to store outputs from each segment
+segment_outputs <- list()
+
+# Iterate over segments and process each segment separately
+for (i in 1:num_segments) {
+  start_index <- (i - 1) * max_seq_length + 1
+  end_index <- min(i * max_seq_length, length(tokenized_text$input_ids))
+  
+  # Extract the segment
+  segment_input_ids <- tokenized_text$input_ids[start_index:end_index]
+  
+  # Convert the segment into a tensor
+  segment_tensor <- torch_tensor(segment_input_ids)
+  
+  # Pass the segment through the classifier model and store the outputs
+  segment_outputs[[i]] <- classifier(segment_tensor)
+}
+
+# Concatenate or merge the outputs from all segments if needed
+final_output <- # Merge segment_outputs if necessary
+  
+  # Process the final output as needed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#实验
+data <- data.frame(
+  year = c("2024.1", "2023.1", "2023.2", "2023.5", "2023.6", "2023.7", "2023.9", "2023.11", "2023.12", "2022.1", "2022.3", "2022.5"),
+  positive_score = c(0.666, 0.670, 0.982, 0.988, 0.993, 0.993, 0.979, 0.98, 0.982, 0.562, 0.582, 0.708)
+)
+
+# Remove rows with NA values
+data <- na.omit(data)
+
+# Convert year column to numeric
+data$year <- as.numeric(gsub("\\.", "", data$year))  # Remove the period and convert to numeric
+
+# Print the data
+print(data)
+
+boxplot(data$positive_score ~ data$year, 
+        main = "Positive Scores Distribution by Year",
+        xlab = "Year",
+        ylab = "Positive Score",
+        col = "lightblue",
+        border = "black")
+
+hist(data$positive_score,
+     main = "Distribution of Positive Scores",
+     xlab = "Positive Score",
+     ylab = "Frequency",
+     col = "lightblue",
+     border = "black")
+
+
+
+
+
+
+
+data <- c(
+  "2024.1 positive:0.666",
+  "2023.3 positive:0.982",
+  "2023.5 positive:0.988",
+  "2023.6 positive:0.993",
+  "2023.7 positive:0.993",
+  "2023.9 positive:0.979",
+  "2023.11 positive:0.98",
+  "2023.12 positive:0.982",
+  "2022.1 positive:0.562",
+  "2022.3 positive:0.582",
+  "2022.5 positive:0.708",
+  "2022.6 positive:0.959",
+  "2022.7 positive:0.970",
+  "2022.9 positive:0.981",
+  "2021.1 negative:0.965",
+  "2021.3 negative:0.973",
+  "2021.4 negative:0.942",
+  "2021.6 negative:0.896",
+  "2021.7 negative:0.967",
+  "2021.9 negative:0.911",
+  "2021.11 negative:0.668",
+  "2021.12 positive:0.825",
+  "2020.3. positive:0.973",
+  "2020.4 negative:0.942",
+  "2020.6 negative:0.896",
+  "2020.7 positive:0.730",
+  "2020.9 negative:0.989",
+  "2020.11 negative:0.982",
+  "2020.12 negative:0.980",
+  "2019.1 positive:0.866",
+  "2019.3 negative:0.842",
+  "2019.5 negative:0.645",
+  "2019.6 negative:0.571",
+  "2019.7 negative:0.969",
+  "2019.9 negative:0.839",
+  "2019.10.11 positive:0.853"
+)
+
+# Parse the data into a data frame
+parsed_data <- sapply(data, function(x) {
+  year <- substr(x, 1, 4)
+  sentiment <- ifelse(grepl("positive", x), "positive", "negative")
+  score <- as.numeric(gsub("positive:|negative:", "", sub(".*:", "", x)))
+  return(data.frame(Year = year, Sentiment = sentiment, Score = score))
+}, simplify = FALSE)
+
+parsed_data <- do.call(rbind, parsed_data)
+
+# Summary statistics
+summary_stats <- aggregate(Score ~ Sentiment, data = parsed_data, FUN = function(x) {
+  c(mean = mean(x), sd = sd(x))
+})
+
+print(summary_stats)
+
+# Boxplot
+boxplot(Score ~ Sentiment, data = parsed_data, main = "Sentiment Scores Distribution", xlab = "Sentiment", ylab = "Score")
+
+# Histogram
+hist(parsed_data$Score, main = "Distribution of Sentiment Scores", xlab = "Score", ylab = "Frequency")
+
+library(ggplot2)
+library(dplyr)
+
+# 创建数据框
+data <- data.frame(
+  Date = as.Date(c(
+    "2024-01-01", "2023-02-01", "2023-03-01", "2023-05-01", "2023-06-01",
+    "2023-07-01", "2023-09-01", "2023-11-01", "2023-12-01", "2022-01-01",
+    "2022-03-01", "2022-05-01", "2022-06-01", "2022-07-01", "2022-09-01",
+    "2022-11-01", "2022-12-01", "2021-01-01", "2021-03-01", "2021-04-01",
+    "2021-06-01", "2021-07-01", "2021-09-01", "2021-11-01", "2021-12-01",
+    "2020-01-01", "2020-03-03", "2020-03-15", "2020-03-23", "2020-04-01",
+    "2020-06-01", "2020-07-01", "2020-09-01", "2020-11-01", "2020-12-01",
+    "2019-01-01", "2019-03-01", "2019-05-01", "2019-06-01", "2019-07-01",
+    "2019-09-01", "2019-10-11", "2019-10-30", "2019-12-01")),
+  Positive = c(
+    60, 54.5, 54.5, 54.5, 70, 54.5, 60, 60, 45.5, 50, 45.5, 41.7, 54.5,
+    66.7, 63.6, 41.7, 41.7, 69.2, 41.7, 33.3, 38.5, 30.8, 38.5, 46.7, 53.8,
+    38.5, 60, 56.2, 50, 54.5, 58.3, 75, 53.8, 41.7, 41.7, 70, 54.5, 63.6,
+    54.5, 41.7, 58.3, 70, 46.2, 50),
+  Negative = c(
+    40, 45.5, 45.5, 45.5, 30, 45.5, 40, 40, 54.5, 50, 54.5, 58.3, 45.5,
+    33.3, 36.4, 58.3, 58.3, 30.8, 58.3, 66.7, 61.5, 69.2, 61.5, 53.3, 46.2,
+    61.5, 40, 43.8, 50, 45.5, 41.7, 25, 46.2, 58.3, 58.3, 30, 45.5, 36.4,
+    45.5, 58.3, 41.7, 30, 53.8, 50)
+)
+
+# 计算积极和消极情感的总和
+total_positive <- sum(data$Positive)
+total_negative <- sum(data$Negative)
+
+# 创建包含总和的数据框
+summary_data <- data.frame(
+  Sentiment = c("Positive", "Negative"),
+  Total = c(total_positive, total_negative)
+)
+
+# 添加百分比标签
+summary_data$Percent <- summary_data$Total / sum(summary_data$Total) * 100
+
+# 绘制饼状图
+pie_chart <- ggplot(summary_data, aes(x = "", y = Total, fill = Sentiment)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  labs(title = "Total Sentiment of FOMC Files") +
+  scale_fill_manual(values = c("Green", "orange")) +
+  theme_void()
+
+# 添加百分比标签
+pie_chart + geom_text(aes(label = paste(round(Percent, 1), "%")), position = position_stack(vjust = 0.5))
+
+
+
+
+
+
+
+import PyPDF2
+from wordcloud import WordCloud
+from wordcloud import STOPWORDS
+import matplotlib.pyplot as plt
+
+# PDF文件路径
+pdf_file_path = r"C:\Users\DELL\Desktop\科研数据\2019.1.30.pdf"
+
+# 打开PDF文件
+with open(pdf_file_path, 'rb') as pdf_file:
+  # 创建PDF文件阅读器对象
+  pdf_reader = PyPDF2.PdfFileReader(pdf_file)
+
+# 初始化变量存储文本内容
+text = ''
+
+# 逐页读取PDF文本内容
+for page_num in range(pdf_reader.numPages):
+  page = pdf_reader.getPage(page_num)
+text += page.extractText()
+
+# 清理文本数据（可根据需要进行进一步处理）
+# 例如，删除换行符、多余空格等
+text = text.replace('\n', ' ')
+
+# 生成词云
+stop_words = ["https", "co", "RT"] + list(STOPWORDS)
+wordcloud = WordCloud(max_font_size=50, max_words=100, background_color="white", stopwords=stop_words).generate(text)
+
+# 绘制词云
+plt.figure()
+plt.title("Word Cloud for PDF")
+plt.imshow(wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.show()
+
+
+
+
+
+# Input data
+data <- data.frame(
+  period = c("2019.1", "2019.3", "2019.5", "2019.6", "2019.7", "2019.9", "2019.10.11", "2019.10.30", "2019.12",
+             "2020.1", "2020.3.3", "2020.3.15", "2020.3.23", "2020.4", "2020.6", "2020.7", "2020.9", "2020.11", "2020.12",
+             "2021.1", "2021.3", "2021.4", "2021.6", "2021.7", "2021.9", "2021.11", "2021.12",
+             "2022.1", "2022.3", "2022.5", "2022.6", "2022.7", "2022.9", "2022.11", "2022.12",
+             "2023.2", "2023.3", "2023.5", "2023.6", "2023.7", "2023.9", "2023.11", "2023.12",
+             "2024.1"),
+  positive = c(70, 54.5, 63.6, 54.5, 41.7, 58.3, 70, 46.2, 50, 38.5, 60, 56.2, 50, 54.5, 58.3, 75, 53.8, 41.7, 41.7,
+               69.2, 41.7, 33.3, 38.5, 30.8, 38.5, 46.7, 53.8,
+               50, 45.5, 41.7, 54.5, 66.7, 63.6, 41.7, 41.7,
+               54.5, 54.5, 54.5, 70, 54.5, 60, 60, 45.5, 50),
+  negative = c(30, 45.5, 36.4, 45.5, 58.3, 41.7, 30, 53.8, 50, 61.5, 40, 43.8, 50, 45.5, 41.7, 25, 46.2, 58.3, 58.3,
+               30.8, 58.3, 66.7, 61.5, 69.2, 61.5, 53.3, 46.2,
+               50, 54.5, 58.3, 45.5, 33.3, 36.4, 58.3, 58.3,
+               45.5, 45.5, 45.5, 30, 45.5, 40, 40, 54.5, 50)
+)
+
+# Calculate positivity ratio
+data$pos_ratio <- (data$positive - data$negative) / (data$positive + data$negative)
+
+# Convert period column to factor with ordered levels
+data$period <- factor(data$period, levels = unique(data$period))
+
+# Plot
+plot(data$period, data$pos_ratio, type = "o", col = "blue", pch = 19, ylim = c(-0.5, 0.5),
+     main = "Sentiment Index Over Time", xlab = "Period", ylab = "Positivity Ratio",
+     xaxt = "n")
+axis(1, at = seq_along(data$period), labels = data$period, cex.axis = 0.7, las = 2)
+# 创建一个新的绘图来添加线条
+lines(data$period, data$pos_ratio, col = "blue", type = "o")
+
+
+
+# Calculate sentiment index
+sentiment_index <- (data$positive - data$negative) / (data$positive + data$negative)
+
+# Plot histogram
+hist(sentiment_index, breaks = 10, col = "skyblue", xlab = "Sentiment Index", 
+     ylab = "Frequency", main = "Histogram of Sentiment Index")
+
+
+
+
+
+
+
+# 提取年份
+years <- unique(substring(data$period, 1, 4))
+
+# 初始化画布
+plot(NULL, xlim = c(1, length(years)), ylim = c(-0.5, 0.5), 
+     xlab = "Year", ylab = "Sentiment Index", 
+     main = "Time Plot of Sentiment Index with Confidence Intervals")
+
+# 循环绘制每年的数据和范围线
+for (i in 1:length(years)) {
+  year_data <- subset(data, substring(period, 1, 4) == years[i])
+  x <- i
+  y_mean <- mean(year_data$pos_ratio)
+  y_min <- min(year_data$pos_ratio)
+  y_max <- max(year_data$pos_ratio)
+  
+  # 绘制数据点
+  points(x, y_mean, pch = 19, col = "blue")
+  
+  # 绘制范围阴影
+  polygon(c(i - 0.4, i + 0.4, i + 0.4, i - 0.4), 
+          c(y_min, y_min, y_max, y_max), 
+          col = "gray", border = NA)
+  
+  # 连接数据点
+  if (i > 1) {
+    prev_year_data <- subset(data, substring(period, 1, 4) == years[i - 1])
+    lines(c(i - 1, i), c(tail(prev_year_data$pos_ratio, 1), y_mean), col = "blue")
+  }
+}
+
+# 添加年份标签
+axis(1, at = 1:length(years), labels = years)
+
