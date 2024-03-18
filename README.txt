@@ -1,13 +1,31 @@
-﻿1. Dongnan Liu (liu02385@umn.edu)
-2. How to compile and run your program: Open the fold in Intellij to run the FractalDrawer file and choose a shape from a Triangle, Rectangle, and Circle and it will draw different shapes. 
-3. Assumptions: 
-If you type “Circle”, it will create four circles every time and each of these four circles will generate four circles at a time, and so on. This loop runs 8 times in my code. The area and the perimeter of the new circle will be half of the previous one. The four circles that were created by the previous one will be in four corners of the circle (although the circle has no corner).
-If you type “Triangle”, it will create three triangles every time and each of these will generate three triangles at a time, and so on. This loop runs 8 times in my code. The area and the perimeter of the new triangle will be half of the previous one. The three triangles that were created by the previous one will be in the three corners of the triangle.
-If you type “Rectangle”, it will create four rectangles every time and each of these will generate itself four rectangles at a time, and so on. This loop runs 8 times in my code. The area and the perimeter of the new rectangle will be half of the previous one. The four rectangles that were created by the previous one will be in the four corners of the rectangle.
-4. Known bugs: I don’t know why the graphics in the canvas on my computer look a little strange but if you want to click on the top right corner and expand the page, you will see the correct graphic.
-5. outside sources: use google to find how to write some comments.
-6. Include the statement:
-“I certify that the information contained in this README file is complete and accurate. 
-I have both read and followed the course policies in the ‘Academic Integrity - Course
- Policy’ section of the course syllabus.”
-—---- Dongnan Liu
+Group members’ names and x500s
+Dongnan Liu: liu02385,  David Qi: qi000154
+
+
+• Contributions of each partner (if working with a partner)
+We communicate with each other
+LinkedList.java(Dongnan Liu) 
+ArrayList.java(David Qi)
+
+
+• How to compile and run your program 
+We use Intellij to compile and run our program. 
+Everytime we click the green run button on the right top corner to compile and run our program. 
+
+
+• Any assumptions
+LinkedList and ArrayList implement the list interface so they include all of the method in the list.java.
+
+
+• Additional features that you implemented (if applicable)
+ 
+• Any known bugs or defects in the program 
+In Linkedlist I have num variable at first but I didn't use num in the size method.
+
+• Any outside sources (aside from course resources) consulted for ideas used in the project, in the format: 
+– the logic of interface method: TA
+- Geogle
+
+“I certify that the information contained in this README file is complete and accurate. I have both read and followed the course policies in the ‘Academic Integrity - Course Policy’ section of the course syllabus.” 
+Dongnan Liu
+ David Qi
